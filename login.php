@@ -1,72 +1,30 @@
 <?php
-// Reemplazar "tu_clave_secreta_recaptcha" con tu clave secreta de reCAPTCHA
-$recaptcha_secret_key = "tu_clave_secreta_recaptcha";
+session_start();
+include 'db.php';
 
-// Verificar el reCAPTCHA
-if (isset($_POST['g-recaptcha-response'])) {
-    $captcha = $_POST['g-recaptcha-response'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-    $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$recaptcha_secret_key&response=$captcha");
+    $sql = "SELECT * FROM users WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    $response = json_decode($response);
-
-    if (!$response->success) {
-        // reCAPTCHA inválido
-        header("Location: index.html");
-        exit;
-    }
-}
-
-// Evitar SQL Injection
-function sanitize_input($input) {
-    $input = trim($input);
-    $input = stripslashes($input);
-    $input = htmlspecialchars($input);
-    return $input;
-}
-
-// Conectar a la base de datos
-$servername = "nombre_servidor";
-$username = "tu_usuario";
-$password = "tu_contraseña";
-$dbname = "nombre_base_de_datos";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Obtener datos del formulario
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = sanitize_input($_POST["username"]);
-    $password = sanitize_input($_POST["password"]);
-
-    // Encriptar la contraseña (usando Bcrypt)
-    $password = password_hash($password, PASSWORD_BCRYPT);
-
-    // Consulta SQL segura para evitar SQL Injection
-    $sql = $conn->prepare("SELECT * FROM usuarios WHERE username = ?");
-    $sql->bind_param("s", $username);
-    $sql->execute();
-
-    $result = $sql->get_result();
-
-    if ($result->num_rows == 1) {
-        $row = $result->fetch_assoc();
-        if (password_verify($_POST["password"], $row["password"])) {
-            // Login exitoso
-            header("Location: dashboard.php");
-            exit;
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        if (password_verify($password, $user['hashed_password'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_role'] = $user['role'];
+            header("Location: dashboard.html");
         } else {
-            // Login fallido
-            header("Location: index.html");
-            exit;
+            echo "Incorrect password.";
         }
     } else {
-        // Usuario no encontrado
-        header("Location: index.html");
-        exit;
+        echo "No user found with that email.";
     }
+    $stmt->close();
 }
+$conn->close();
 ?>

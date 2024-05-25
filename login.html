@@ -1,53 +1,27 @@
 <!DOCTYPE html>
 <html lang="es">
-
-
-<!-- login23:11-->
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
-    <title>Clinica Oftalmologica Unidad Laser</title>
-    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-    <!--[if lt IE 9]>
-		<script src="assets/js/html5shiv.min.js"></script>
-		<script src="assets/js/respond.min.js"></script>
-	<![endif]-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-    <div class="main-wrapper account-wrapper">
-        <div class="account-page">
-			<div class="account-center">
-				<div class="account-box">
-                    <form action="index.html" class="form-signin">
-						<div class="account-logo">
-                            <a href="index.html"><img src="assets/img/logo-ula.png" alt=""></a>
-                        </div>
-                        <div class="form-group">
-                            <label>Usuario</label>
-                            <input type="text" autofocus="" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Contraseña</label>
-                            <input type="password" class="form-control">
-                        </div>
-                        <div class="form-group text-center">
-                            <button type="submit" class="btn btn-primary account-btn">Entrar</button>
-                        </div>
-                    </form>
-                </div>
-			</div>
-        </div>
+    <div class="login-container">
+        <h1>Iniciar Sesión</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Correo Electrónico:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Ingresar</button>
+        </form>
+        <div id="error" class="error-message"></div>
     </div>
-    <script src="assets/js/jquery-3.2.1.min.js"></script>
-	<script src="assets/js/popper.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/app.js"></script>
+    <script src="scripts.js"></script>
 </body>
-
-
-<!-- login23:12-->
 </html>
